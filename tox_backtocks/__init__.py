@@ -1,12 +1,30 @@
 """A tox plugin that allows backquote expansion in set_env section.
 """
 
+from typing import Callable, Any
+
 from tox.config.cli.parser import ToxParser
 from tox.config.sets import EnvConfigSet
 from tox.execute.api import Outcome, StdinSource
 from tox.plugin import impl
 from tox.session.state import State
 from tox.tox_env.api import ToxEnv
+
+EvalFunc = Callable[[ToxEnv, str], str]
+
+def eval_cache_decorator(func: EvalFunc) -> EvalFunc:
+
+    cache: dict[Any, str] = {}
+
+    def _function(tox_env: ToxEnv, cmd: str) -> str:
+        key = (tox_env, cmd)
+        try:
+            return cache[key]
+        except KeyError:
+            cache[key] = func(tox_env, cmd)
+            return cache[key]
+
+    return _function
 
 
 def has_backticks(string: str) -> str | None:
@@ -19,6 +37,7 @@ def has_backticks(string: str) -> str | None:
     return None
 
 
+@eval_cache_decorator
 def eval_backquote(tox_env: ToxEnv, cmd: str) -> str:
     """Evaluate a command inside a tox environment"""
     outcome = tox_env.execute(["bash", "-c", cmd], StdinSource.OFF)
