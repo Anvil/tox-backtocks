@@ -19,6 +19,12 @@ def has_backticks(string: str) -> str | None:
     return None
 
 
+def eval_backquote(tox_env: ToxEnv, cmd: str) -> str:
+    """Evaluate a command inside a tox environment"""
+    outcome = tox_env.execute(["bash", "-c", cmd], StdinSource.OFF)
+    return outcome.out.rstrip('\r\n')
+
+
 # pylint: disable=protected-access
 
 
@@ -28,5 +34,4 @@ def tox_before_run_commands(tox_env: ToxEnv) -> None:
     set_env = tox_env.conf["set_env"]
     for var, value in set_env._materialized.items():
         if cmd := has_backticks(value):
-            outcome = tox_env.execute(["bash", "-c", cmd], StdinSource.OFF)
-            set_env.update({var: outcome.out.rstrip('\r\n')})
+            set_env.update({var: eval_backquote(tox_env, cmd)})
