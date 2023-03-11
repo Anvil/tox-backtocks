@@ -21,9 +21,10 @@ Here's the roadmap to 1.0 release and our current status:
       expression`
 - [ ] Allow user to configure if we should strip the trailing newline
       characters or not.
-- [ ] Allow another variable to reuse the evaluated `backquoted expression`
-- [ ] Allow another variable to reuse the evaluated `backquoted expression`
-      without reevaluating it :)
+- [x] Allow another variable to reuse the evaluated `backquoted expression`
+- [x] Allow another variable to reuse the evaluated `backquoted expression`
+      without reevaluating it :) (I mean, it's hacked, but heh, better than
+      nothing)
 - [ ] If evaluating through a shell, automatically add said shell to
       `allowlist_externals` section
 - [x] Have a working package
