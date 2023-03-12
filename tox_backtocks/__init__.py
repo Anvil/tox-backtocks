@@ -54,7 +54,9 @@ def eval_backquote(tox_env: ToxEnv, cmd: str) -> str:
 @impl
 def tox_add_env_config(env_conf: EnvConfigSet, state: State) -> None:
     """Post process config after parsing."""
-    for var, value in set_env._raw.items():
+    # pylint: disable=unused-argument
+    set_env = env_conf["set_env"]
+    for _, value in set_env._raw.items():
         if has_backticks(value):
             # Add bash in order to be able to evaluate backquotes.
             env_conf["allowlist_externals"].append(SHELL)
