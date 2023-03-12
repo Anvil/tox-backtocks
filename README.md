@@ -17,7 +17,7 @@ Here's the roadmap to 1.0 release and our current status:
       and evaluate a possible-complex shell expression)
 - [ ] Allow a `backquote var` value to contain regular string parts and a
       `backquote expression`
-- [ ] Allow a `backquote var` value to container more than one `backquote
+- [ ] Allow a `backquote var` value to contain more than one `backquote
       expression`
 - [ ] Allow user to configure if we should strip the trailing newline
       characters or not.
@@ -25,7 +25,7 @@ Here's the roadmap to 1.0 release and our current status:
 - [x] Allow another variable to reuse the evaluated `backquoted expression`
       without reevaluating it :) (I mean, it's hacked, but heh, better than
       nothing)
-- [ ] If evaluating through a shell, automatically add said shell to
+- [x] If evaluating through a shell, automatically add said shell to
       `allowlist_externals` section
 - [x] Have a working package
 - [ ] Write user documentation

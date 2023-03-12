@@ -12,7 +12,12 @@ from tox.tox_env.api import ToxEnv
 
 EvalFunc = Callable[[ToxEnv, str], str]
 
+
+SHELL = "bash"
+
+
 def eval_cache_decorator(func: EvalFunc) -> EvalFunc:
+    """A cache decorator for eval_backquote"""
 
     cache: dict[Any, str] = {}
 
@@ -40,11 +45,20 @@ def has_backticks(string: str) -> str | None:
 @eval_cache_decorator
 def eval_backquote(tox_env: ToxEnv, cmd: str) -> str:
     """Evaluate a command inside a tox environment"""
-    outcome = tox_env.execute(["bash", "-c", cmd], StdinSource.OFF)
+    outcome = tox_env.execute([SHELL, "-c", cmd], StdinSource.OFF)
     return outcome.out.rstrip('\r\n')
 
 
 # pylint: disable=protected-access
+
+@impl
+def tox_add_env_config(env_conf: EnvConfigSet, state: State) -> None:
+    """Post process config after parsing."""
+    for var, value in set_env._raw.items():
+        if has_backticks(value):
+            # Add bash in order to be able to evaluate backquotes.
+            env_conf["allowlist_externals"].append(SHELL)
+            return
 
 
 @impl
