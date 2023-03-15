@@ -10,7 +10,7 @@ from tox.plugin import impl
 from tox.session.state import State
 from tox.tox_env.api import ToxEnv
 
-EvalFunc = Callable[[ToxEnv, str], str]
+EvalFunc = Callable[[ToxEnv, str, str], str]
 
 
 SHELL = "bash"
@@ -21,12 +21,12 @@ def eval_cache_decorator(func: EvalFunc) -> EvalFunc:
 
     cache: dict[Any, str] = {}
 
-    def _function(tox_env: ToxEnv, cmd: str) -> str:
+    def _function(tox_env: ToxEnv, cmd: str, var: str) -> str:
         key = (tox_env, cmd)
         try:
             return cache[key]
         except KeyError:
-            cache[key] = func(tox_env, cmd)
+            cache[key] = func(tox_env, cmd, var)
             return cache[key]
 
     return _function
@@ -43,9 +43,9 @@ def has_backticks(string: str) -> str | None:
 
 
 @eval_cache_decorator
-def eval_backquote(tox_env: ToxEnv, cmd: str) -> str:
+def eval_backquote(tox_env: ToxEnv, cmd: str, var: str) -> str:
     """Evaluate a command inside a tox environment"""
-    outcome = tox_env.execute([SHELL, "-c", cmd], StdinSource.OFF)
+    outcome = tox_env.execute([SHELL, "-c", cmd], StdinSource.OFF, run_id=f"backtocks[{var}]")
     return outcome.out.rstrip('\r\n')
 
 
@@ -69,4 +69,4 @@ def tox_before_run_commands(tox_env: ToxEnv) -> None:
     set_env = tox_env.conf["set_env"]
     for var, value in set_env._materialized.items():
         if cmd := has_backticks(value):
-            set_env.update({var: eval_backquote(tox_env, cmd)})
+            set_env.update({var: eval_backquote(tox_env, cmd, var)})
