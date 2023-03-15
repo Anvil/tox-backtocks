@@ -1,4 +1,10 @@
 # tox-backtocks
+
+[![PyPI version](https://img.shields.io/pypi/v/tox-backtocks?logo=pypi&style=plastic)](https://pypi.python.org/pypi/tox-backtocks/)
+[![Supported Python Version](https://img.shields.io/pypi/pyversions/tox-backtocks?logo=python&style=plastic)](https://pypi.python.org/pypi/tox-backtocks/)
+[![License](https://img.shields.io/pypi/l/tox-backtocks?color=green&logo=GNU&style=plastic)](https://github.com/Anvil/tox-backtocks/blob/main/LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/tox-backtocks?color=magenta&style=plastic)](https://pypistats.org/packages/tox-backtocks)
+
 A refreshed backticks tox plugin 
 
 This is a very early stage release. Use it at your own risks.
