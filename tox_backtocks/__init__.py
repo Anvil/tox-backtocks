@@ -27,6 +27,5 @@ def tox_add_env_config(env_conf: EnvConfigSet, state: State) -> None:
 def tox_before_run_commands(tox_env: ToxEnv) -> None:
     """Eval and replace backquotes expressions"""
     set_env = tox_env.conf["set_env"]
-    for var, value in set_env_items(set_env):
-        if cmd := has_backticks(value):
-            set_env.update({var: eval_backquote(tox_env, cmd, var)})
+    set_env.update({var: eval_backquote(tox_env, cmd, var)
+                    for var, cmd in set_env_backquote_items(set_env)})
